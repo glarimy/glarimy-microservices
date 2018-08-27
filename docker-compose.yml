@@ -1,0 +1,23 @@
+version: "2.1"
+services:
+  mongo:
+    image: mongo:3.2.4
+    ports:
+    - 27017:27017
+    command: --smallfiles
+        
+  glarimy-ms-librarian:
+    image: glarimy/glarimy-ms-librarian:latest
+    ports:
+    - 2310:2310
+    links:
+    - mongo
+    entrypoint: "java -Dspring.data.mongodb.uri=mongodb://mongo:27017/library -Djava.security.egd=file:/dev/./urandom -jar /glarimy-ms-librarian.jar"
+
+  glarimy-ms-user:
+    image: glarimy/glarimy-ms-user:latest
+    ports:
+    - 2207:2207
+    links:
+    - mongo
+    entrypoint: "java -Dspring.data.mongodb.uri=mongodb://mongo:27017/library -Djava.security.egd=file:/dev/./urandom -jar /glarimy-ms-user.jar"
